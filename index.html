@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MShop Widget</title>
+  <style>
+    body { font-family: sans-serif; margin: 1em; }
+    .product { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .button { padding: 8px; border: 1px solid #ccc; text-decoration: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Crypto Shop</h2>
+  <div id="product-list">
+    <div class="product">
+      <strong>Product 1</strong>
+      <p>Price: 0.01 BTC</p>
+      <button class="button" onclick="buyProduct('product1')">Buy Now</button>
+    </div>
+  </div>
+
+  <div id="payment-status"></div>
+
+  <script>
+    window.addEventListener("message", function(event) {
+      if (event.data && event.data.type === "matrix-widget-init") {
+        console.log("Initialized with config:", event.data);
+        // Store or use widget configuration data as needed
+      }
+    });
+
+    // Function to simulate a crypto payment process
+    async function buyProduct(productId) {
+      // For this example, we'll simulate a successful payment after a delay
+      document.getElementById('payment-status').innerText = "Processing payment...";
+      setTimeout(() => {
+        document.getElementById('payment-status').innerText = "Payment successful for " + productId + "!";
+        window.parent.postMessage({
+          type: "m.widget_action",
+          action: "purchase_made",
+          data: { product: productId }
+        }, "*");
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
